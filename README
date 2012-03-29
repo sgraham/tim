@@ -1,0 +1,27 @@
+tim
+---
+
+A silly little tool to time how long it takes to run a command. Similar to
+"time" in bash, etc. but it can't be called "time" because the Windows shell
+reserves that for the most useless utility ever.
+
+
+Build
+-----
+
+From a vsvars32.bat shell (i.e. with compiler in the path):
+
+  C:\...\tim>m.bat
+
+
+Example
+-------
+
+  c:\src\proj>tim some.exe -with arguments
+  some.exe: blah blorp
+  some.exe: wee waa
+
+  real: 0m3.947s
+
+Meaning it took just under 4 seconds to run some.exe. tim has no command line
+arguments, everything after its name is the subcommand.
