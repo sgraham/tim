@@ -43,7 +43,10 @@ int main() {
   ULONGLONG start_time = GetTickCount64();
   if (!CreateProcess(NULL, command, NULL, NULL, TRUE, 0, NULL, NULL,
                      &startup_info, &process_info)) {
-    wprintf(L"tim: Could not spawn subprocess, command line:\n%ws\n", command);
+    wprintf(L"tim: Could not spawn subprocess, command line:\n"
+            L"%ws\n"
+            L"You may need to prefix the command with \"cmd /c \".\n",
+            command);
     exit(1);
   }
   CloseHandle(process_info.hThread);
