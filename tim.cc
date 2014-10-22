@@ -40,6 +40,11 @@ int main() {
   DWORD exit_code;
   GetStartupInfo(&startup_info);
 
+  LARGE_INTEGER qpc_frequency;
+  LARGE_INTEGER qpc_start_time, qpc_end_time, qpc_elapsed_microseconds;
+  QueryPerformanceFrequency(&qpc_frequency);
+  QueryPerformanceCounter(&qpc_start_time);
+
   ULONGLONG start_time = GetTickCount64();
   if (!CreateProcess(NULL, command, NULL, NULL, TRUE, 0, NULL, NULL,
                      &startup_info, &process_info)) {
@@ -53,10 +58,19 @@ int main() {
   WaitForSingleObject(process_info.hProcess, INFINITE);
   GetExitCodeProcess(process_info.hProcess, &exit_code);
   CloseHandle(process_info.hProcess);
+
+  QueryPerformanceCounter(&qpc_end_time);
+  qpc_elapsed_microseconds.QuadPart =
+      qpc_end_time.QuadPart - qpc_start_time.QuadPart;
+  qpc_elapsed_microseconds.QuadPart *= 1000000;
+  qpc_elapsed_microseconds.QuadPart /= qpc_frequency.QuadPart;
+
   ULONGLONG end_time = GetTickCount64();
   ULONGLONG elapsed = end_time - start_time;
-  wprintf(L"\nreal: %lldm%.03fs\n",
+
+  wprintf(L"\nreal: %lldm%.03fs\nqpc: %lldus\n",
           elapsed / (60 * 1000),
-          (elapsed % (60 * 1000)) / 1000.0);
+          (elapsed % (60 * 1000)) / 1000.0,
+          qpc_elapsed_microseconds.QuadPart);
   exit(exit_code);
 }
