@@ -40,12 +40,13 @@ int main() {
   DWORD exit_code;
   GetStartupInfo(&startup_info);
 
+  ULONGLONG start_time = GetTickCount64();
+
   LARGE_INTEGER qpc_frequency;
   LARGE_INTEGER qpc_start_time, qpc_end_time, qpc_elapsed_microseconds;
   QueryPerformanceFrequency(&qpc_frequency);
   QueryPerformanceCounter(&qpc_start_time);
 
-  ULONGLONG start_time = GetTickCount64();
   if (!CreateProcess(NULL, command, NULL, NULL, TRUE, 0, NULL, NULL,
                      &startup_info, &process_info)) {
     wprintf(L"tim: Could not spawn subprocess, command line:\n"
