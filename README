@@ -25,3 +25,7 @@ Example
 
 Meaning it took just under 4 seconds to run some.exe. tim has no command line
 arguments, everything after its name is the subcommand.
+
+An identical copy of tim.exe is made as timavg.exe. If 'timavg' is used in place
+of 'tim', the subcommand is run 7 times and the average is reported, discarding
+fastest and slowest.
