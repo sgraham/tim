@@ -55,16 +55,30 @@ Result Run(LPWSTR command) {
   QueryPerformanceFrequency(&qpc_frequency);
   QueryPerformanceCounter(&qpc_start_time);
 
-  if (!CreateProcess(NULL, command, NULL, NULL, TRUE, 0, NULL, NULL,
-                     &startup_info, &process_info)) {
+  if (!CreateProcess(NULL, command, NULL, NULL, TRUE,
+                     CREATE_SUSPENDED,
+                     NULL, NULL, &startup_info, &process_info)) {
     wprintf(L"tim: Could not spawn subprocess, command line:\n"
             L"%ws\n"
             L"You may need to prefix the command with \"cmd /c \".\n",
             command);
     exit(1);
   }
+  HANDLE job = CreateJobObject(NULL, NULL);
+  if (!AssignProcessToJobObject(job, process_info.hProcess))
+    wprintf(L"failed to AssignProcessToJobObject\n");
+  ResumeThread(process_info.hThread);
+
   CloseHandle(process_info.hThread);
   WaitForSingleObject(process_info.hProcess, INFINITE);
+
+  JOBOBJECT_EXTENDED_LIMIT_INFORMATION limit = {};
+  if (!QueryInformationJobObject(job, JobObjectExtendedLimitInformation,
+                                 &limit, sizeof(limit), NULL)) {
+    wprintf(L"failed to QueryInformationJobObject\n");
+  }
+  CloseHandle(job);
+
   GetExitCodeProcess(process_info.hProcess, &result.exit_code);
   CloseHandle(process_info.hProcess);
 
@@ -77,6 +91,7 @@ Result Run(LPWSTR command) {
   ULONGLONG end_time = GetTickCount64();
   result.elapsed = end_time - start_time;
 
+  wprintf(L"\npeak memory: %.2fMB", limit.PeakProcessMemoryUsed / 1e6);
   wprintf(L"\nreal: %lldm%.03fs\nqpc: %lldus\n",
           result.elapsed / (60 * 1000),
           (result.elapsed % (60 * 1000)) / 1000.0,
