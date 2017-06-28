@@ -21,7 +21,9 @@ Example
   some.exe: blah blorp
   some.exe: wee waa
 
-  real: 0m3.947s
+  peak memory: 8.22MB
+  real: 0m3.953s
+  qpc: 3940596us
 
 Meaning it took just under 4 seconds to run some.exe. tim has no command line
 arguments, everything after its name is the subcommand.
