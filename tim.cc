@@ -91,6 +91,9 @@ Result Run(LPWSTR command) {
   ULONGLONG end_time = GetTickCount64();
   result.elapsed = end_time - start_time;
 
+  // PeakProcessMemoryUsed is the peak commit used by any of the processes in
+  // the job. Because it is a measure of commit rather than physical RAM it can
+  // be larger than the system's total memory.
   wprintf(L"\npeak memory: %.2fMB", limit.PeakProcessMemoryUsed / 1e6);
   wprintf(L"\nreal: %lldm%.03fs\nqpc: %lldus\n",
           result.elapsed / (60 * 1000),

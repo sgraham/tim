@@ -25,8 +25,9 @@ Example
   real: 0m3.953s
   qpc: 3940596us
 
-Meaning it took just under 4 seconds to run some.exe. tim has no command line
-arguments, everything after its name is the subcommand.
+Meaning it took just under 4 seconds to run some.exe and one of the child
+processes in the process tree used a peak of 8.22 MB of commit. tim has no
+command line arguments, everything after its name is the subcommand.
 
 An identical copy of tim.exe is made as timavg.exe. If 'timavg' is used in place
 of 'tim', the subcommand is run 7 times and the average is reported, discarding
