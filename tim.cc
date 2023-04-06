@@ -26,7 +26,7 @@ LPWSTR FindStartOfSubCommand(LPWSTR orig_command, bool* want_avg) {
     exit(1);
   }
   // If the binary is named 'timavg' rather than 'tim' we run multiple times.
-  *want_avg = wcscmp(args[0], L"timavg") == 0;
+  *want_avg = wcsstr(args[0], L"timavg") != 0;
   LPWSTR ret = orig_command + wcslen(args[0]);
   if (orig_command[0] == L'"')
     ret += 2; // Opening and closing quote.
